@@ -1,0 +1,87 @@
+Toda jerarquía de base de datos se basa en los siguientes elementos:
+
+Servidor de base de datos: Computador que tiene un motor de base de datos instalado y en ejecución.
+
+Motor de base de datos: Software que provee un conjunto de servicios encargados de administrar una base de datos.
+
+Base de datos: Grupo de datos que pertenecen a un mismo contexto.
+
+Esquemas de base de datos en PostgreSQL: Grupo de objetos de base de datos que guarda relación entre sí (tablas, funciones, relaciones, secuencias).
+
+Tablas de base de datos: Estructura que organiza los datos en filas y columnas formando una matriz.
+
+PostgreSQL es un motor de base de datos.
+
+Funciones especiales de PostgreSQL
+
+ON CONFLICT DO # Indicamos que hacer frente a un conflicto
+RETURNING # Retorna lo realizado 
+LIKE / ILIKE # Para busqueda de información. ILIKE no discrimina mayusculas y minusculas
+IS / IS NOT # Sirve para filtrar por una condición. Por ej si son nulos o no lo son.
+
+Funciones Especiales avanzadas en PosgreSQL
+• COALES: compara dos valores y retorna el que es nulo # Se usa luego del select para que si un valor es nulo nos arroje una leyenda que queramos.
+• NULLIF: Retorna null si son iguales # Pasamos un arreglo de datos y si son iguales nos dirá NULL 
+• GREATEST: Compara un arreglo y retorna el mayor # Pasamos un arreglo de datos y nos devuelve el mayor de ellos
+• LEAST: Compara un arreglo de valores y retorna el menor # Inversa del anterior
+• BLOQUES ANONIMOS: Ingresa condicionales dentro de una consulta de BD # Son los cases de SQL para armar columnas calculadas
+
+Desafio en pasajeros
+Quienes comienzan su nombre con la "o" o con la "p" y quienes tienen mas de 18 años
+
+Podemos guardar consultas utiles y frecuentes como vistas volatiles (si queremos que cambien)
+o vistas materializadas (si queremos conservar una info especifica)
+
+Se consultan por el nombre con el select * from vista o "select * from vista materializada"
+
+PL o procedimientos almacenados: Nos permite escribir codigo dentro de nuestras bases de datos
+
+PL Procedural language, también conocido como procedimientos almacenados, estas nos ayuda a desarrollar código directamente en el motor de bases de datos.
+
+Estructura de un Pl es: Declaración + uso de variable+ código +fin + retorno de valores o no retorna valores.UN bloque de código se ejecuta con la palabra DO $$ BEGIN --insert código here END $$
+
+RAISE NOTICE ‘message’, esta sentencia es para enviar un mensaje en el log de postgres
+
+Retornar una tabla
+
+PLSQL nos permite programar dentro de PostgreSQL y dejar guardadas funciones. Como por ejemplo para convertir la hora de un pais a otro. 
+
+Las funciones las podemos hacer desde el editor de codigo sql o plsql de postgresql o tmb desde pgadmin de manera muy simple e intuitiva
+
+Triggers se llama a adjuntar una pl a una función especifica en una tabla
+
+¿Que son los triggers?
+En este contexto, los triggers, al igual que las tablas, son objetos en los cuales podemos programar unas instrucciones con el fin de que se disparen (he ahí su nombre) cuando haya un evento (cambio) en la tabla relacionada. No puede haber trigger sin ser relacionada a una tabla.
+Los cambios que puede tener una tabla pueden ser (update, insert, delete).
+¿Para qué necesitamos los triggers?
+Un ejemplo claro sería, que como administrador de la base de datos, necesitamos tener un control y saber que usuarios han estado interactuando con la base de datos disparando dichos eventos.
+¿Qué acciones puede realizar un trigger?
+Un trigger puede dispararse ya sea antes, después o en lugar de, de un evento. Por ejemplo: Un usuario al ingresar datos a una tabla por medio del comando Insert, el trigger puede ejecutarse justo antes almacenando en otra tabla información relacionada sobre. ¿quien lo hizo?, la hora, cantidad de datos agregados, etc. Y se hará de forma automática
+También se puede por ejemplo antes de ejecutar el comando update, hacer una copia de respaldo.
+Usualmente los triggers se relacionan con el mantenimiento y administración de las bases de datos.
+
+23. Triggers
+Para la creación de triggers se debe hacer los siguiente
+Crear la función que activará el evento. Para ello se debe tomar los siguientes aspectos:
+
+En la declaración de la función, en la sección del retorno se debe indicar que es tipo triggers es decir RETURNS TRIGGER.
+Luego indicar en que lenguaje está escrito es decir LANGUAE ‘plpgsql’
+
+La función tipo triggers debe retornar los valores OLD acepta lo viejo o NEW acepta lo nuevo. Sí se retorna VOID en nuestra función de tipo triggers no aceptamos cambios es decir RETURN NEW;
+
+Tanto NEW como OLD son un objeto de tipo record y contiene dentro de si el registro, es decir se puede acceder a los campos NEW.campo_nombre del registro
+
+Lo siguiente será crear la regla que estará a la escucha del evento para disparar el triggers, para ello se deberá tomar los siguientes aspectos.
+
+CREATE TRIGGER name_trigger name_event ON name_table FOR EACH ROW EXECUTE PROCEDURE name_procedure;
+
+En la primera sección cuando declaramos el trigger debemos indicar en que momento en que se debe disparar el trigger:
+CREATE TRIGGER name_trigger name_event ON name_table en el name_event allí puede ir alguno de estos tres parámetros para llamar la ejecución del trigger, estos son:
+
+BEFORE = antes,
+
+AFTER=luego,
+
+INSTEAD OF = hacer esto, en vez de lo que iba a hacer el motor de bases de datos.
+
+FOR EACH ROW EXECUTE PROCEDURE name_procedure indica que es para registro o fila de nuestra tabla

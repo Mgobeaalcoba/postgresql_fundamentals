@@ -1,0 +1,11 @@
+Comandos en porgresql (consola)
+• Create database nombre_bd
+• \c nombre_bd (Es como si fuera el use DB)
+• \l -> Muestra todas las bases de datos (ele minúscula)
+• \dt -> muestra las tablas
+• \d -> muestra los detalles de la tabla
+• \h -> ayuda para comandos de SQL
+• \h palabra_sql ->Muestra cómo usar la función
+• Ctrl + c -> cancela lo que se estaba mostrando
+• \g -> permite volver a ejecutar la función que acabas de ejecutar en la consola
+• \timing -> permite activar el contador de tiempo para así saber cuánto se demora una respuesta
