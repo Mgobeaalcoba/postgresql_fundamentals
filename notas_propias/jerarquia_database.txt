@@ -85,3 +85,46 @@ AFTER=luego,
 INSTEAD OF = hacer esto, en vez de lo que iba a hacer el motor de bases de datos.
 
 FOR EACH ROW EXECUTE PROCEDURE name_procedure indica que es para registro o fila de nuestra tabla
+
+Mantenimiento de Postgresql:
+
+Vacuum: La más importante, con tres opciones, Vacuum, Freeze y Analyze.
+Full: la tabla quedará limpia en su totalidad
+Freeze: durante el proceso la tabla se congela y no permite modificaciones hasta que no termina la limpieza
+Analyze: solo revisa la tabla
+
+Analyze: No hace cambios en la tabla. Solo hace una revisión y la muestra.
+
+Reindex: Aplica para tablas con numerosos registros con indices, como por ejemplo las llaves primarias.
+
+Cluster: Especificamos al motor de base de datos que reorganice la información en el disco.
+
+-- ¿Cuál versión de PostgreSQL es recomentable instalar?
+
+Es altamente recomendable seleccionar la penúltima o antepenúltima versión.
+
+-- La principal diferencia entre Vistas y Vistas Materializadas es:
+
+Vista volátil: Siempre que se haga la consulta en la vista, la BD hace la ejecución de la consulta en la BD, por lo que siempre se va a tener información reciente.
+Vista materializada: Hace la consulta una sola vez, y la información queda almacenada en memoria, la siguiente vez que se consulte, trae el dato almacenado, eso es bueno y malo a la vez, bueno porque la velocidad con la que se entrega la información es rápida, malo porque la información no es actualizada. Es ideal utilizar este tipo de vista en procesos que utilice días anteriores, porque el día de ayer, ya pasó y no hay razón para actualizarlo.
+
+La vista volatil se corre en tiempo real. La vista materializada guarda la consulta en memoria
+
+-- ¿Los TRIGGERS pueden ser usados para ignorar inserts?
+
+No. Se usan o se disparan frente a un insert, delete, truncate o update. 
+
+-- Vacuum Full es peligroso porque:
+
+En la pestaña VACUUM hay tres opciones para hacer mantenimiento, FULL se eliminará todos los indices y filas que ya no son aplicables, FREEZE, incluye que durante ese proceso se congelará la tabla o la bases de datos mientras se hace este proceso. ANALYZE solo analiza la bd.
+
+full: Revisa toda la información de la tabla, si hay información que no es aplicable limpiará/eliminará la fila con la información del índice y demás. Activar o desactivar full puede tumbar totalmente la DB.
+freeze: durante el proceso se va a congelar. Ningún usuario va a tener acceso a esta tabla hasta que no termine el proceso de limpieza.
+analyze: El más suave, el programa ejecutará una revisión y mostrará qué tan bien o mal está la tabla.
+
+-- Las replicas funcionan usando:
+
+¿Cuál es la estrategia? Tener una base de datos principal donde se realizan todas las modificaciones, y una base de datos secundaria dónde se realiza las lecturas. Separar las tareas es altamente beneficioso en cuanto al rendimiento de la aplicación, así, cuando se modifica una DB automáticamente se lleva el cambio a la DB de lectura. Todo lo que hay que hacer es configurar 2 servidores de postgres, uno como maestro y otro como esclavo. Se debe modificar la aplicación para que todas las modificaciones se hagan sobre el maestro y la lectura sobre la replica, o la DB en caliente. Es imposible realizar cambios en la DB de réplica.
+
+-- La principal limitación de rendimiento que tenemos en bases de datos es:
+
